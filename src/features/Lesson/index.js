@@ -20,19 +20,12 @@ function Lession(props) {
     return (
         <div>
             <Title>Luyện nghe tiếng anh</Title>
-            <Row gutter={[20, 0]}>
-                <Col span={6}>
-                    <SideBar />
-                </Col>
-                <Col span={18}>
-                    <Routes>
-                        <Route path="/" element={<MainPage />} />
-                        <Route path="update" element={<AddEditPage />} />
-                        <Route path=":lessonId" element={<LessionDetail />} />
-                        <Route path="*" element={<div>Not found</div>}></Route>
-                    </Routes>
-                </Col>
-            </Row>
+            <Routes>
+                <Route path="/" element={<MainPage />} />
+                <Route path="update" element={<AddEditPage />} />
+                <Route path=":lessonId" element={<LessionDetail />} />
+                <Route path="*" element={<div>Not found</div>}></Route>
+            </Routes>
         </div>
     );
 }
