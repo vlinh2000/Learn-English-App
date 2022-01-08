@@ -8,8 +8,8 @@ Category.propTypes = {
 
 const CategoryStyled = styled.div`
     font-size:16px;
-    font-style:italic;
-    color:${props => props.color};
+    font-weight:bold;
+    color:${props => props.color || "#000"};
     margin:0 0 1rem 0.5rem;
 `;
 
