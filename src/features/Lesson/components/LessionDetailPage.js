@@ -9,6 +9,7 @@ import Category from './Category';
 import { CustomerServiceOutlined, HistoryOutlined, InfoOutlined, MenuOutlined, NotificationOutlined, PlusOutlined, PlusSquareOutlined, SendOutlined, SwapOutlined } from '@ant-design/icons/lib/icons';
 import SideBar from './SideBar';
 import { ButtonStyled } from 'assets/images/styles/GobalStyled';
+import AddNewWord from './AddNewWord';
 
 LessionDetailPage.propTypes = {
 
@@ -41,20 +42,6 @@ const Wrapper = styled.div`
     margin-right:2rem;
 `;
 
-const AddButton = styled(Button)`
-    position:absolute;
-    bottom:20px;
-    left:30px;
-    color:#8b68a7;
-    box-shadow:1px 1px 10px 0px #AAA;
-    border:1px solid #8b68a7;
-    
-    &:hover,&:active{
-        border:1px solid #8b68a7;
-        color:#8b68a7;
-        box-shadow:5px 5px 1px 5px #EEE;
-    }
-`;
 
 const GroupContent = styled.div`
     margin-bottom:1rem;
@@ -117,11 +104,12 @@ const LinkStyled = styled(Link)`
 function LessionDetailPage(props) {
     const params = useParams();
     const navigate = useNavigate();
-    const [isLowMode, setIsLowMode] = React.useState(true);
 
     const handleOnchangeLesson = page => {
         navigate(`/lession/${page}`, { replace: true });
     }
+
+    // const [isEdit , setIsEdit] = React.useState(false);
 
     return (
         <LessionDetailStyled>
@@ -139,7 +127,8 @@ function LessionDetailPage(props) {
 
                         <Category icon={<HistoryOutlined />} title="Các từ mới (5)" color="#001f3f" />
                         <ListWord />
-                        <AddButton icon={<PlusSquareOutlined />}>Thêm từ</AddButton>
+                        <AddNewWord />
+
                     </Wrapper>
                 </Col>
                 <Col lg={{ span: 8 }} md={{ span: 12 }} sm={{ span: 24 }} xs={{ span: 24 }}>

@@ -1,6 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
+import { Popover } from 'antd';
+import { ButtonStyled } from 'assets/images/styles/GobalStyled';
+import { DeleteOutlined, EditOutlined } from '@ant-design/icons/lib/icons';
 
 Word.propTypes = {
 
@@ -51,17 +54,49 @@ const ContentBack = styled.div`
 `;
 
 function Word(props) {
+
+    const handleDelete = () => {
+        console.log("delete")
+    }
+
+    const handleEdit = () => {
+        console.log("Edit")
+    }
+
+
     return (
-        <NewWord>
-            <ContentInner>
-                <ContentFont>
-                    spot
-                </ContentFont>
-                <ContentBack>
-                    Chổ ở
-                </ContentBack>
-            </ContentInner>
-        </NewWord>
+        <Popover
+            trigger="click"
+            content={
+                <>
+                    <div style={{ marginBottom: 10 }}>
+                        <ButtonStyled
+                            onClick={handleEdit}
+                            color='#FFDC00'
+                            shape='circle'
+                            icon={<EditOutlined />} />
+                    </div>
+                    <div>
+                        <ButtonStyled
+                            onClick={handleDelete}
+                            color='#FF4136'
+                            shape='circle'
+                            icon={<DeleteOutlined />} />
+                    </div>
+                </>
+            }
+        >
+            <NewWord>
+                <ContentInner>
+                    <ContentFont>
+                        spot
+                    </ContentFont>
+                    <ContentBack>
+                        Chổ ở
+                    </ContentBack>
+                </ContentInner>
+            </NewWord>
+        </Popover>
     );
 }
 

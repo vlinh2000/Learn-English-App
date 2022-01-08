@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { ButtonStyled } from 'assets/images/styles/GobalStyled';
-import { PlusOutlined, UploadOutlined } from '@ant-design/icons/lib/icons';
+import { DeleteOutlined, EditOutlined, PlusOutlined, SettingOutlined, UploadOutlined } from '@ant-design/icons/lib/icons';
 import styled from 'styled-components';
-import { Button, Form, Input, message, Modal, Upload } from 'antd';
+import { Button, Form, Input, message, Modal, Popover, Upload } from 'antd';
 import InputField from 'custom-fields/InputField';
 import UploadField from 'custom-fields/UploadField';
 
@@ -63,13 +63,47 @@ function AddLesson(props) {
     return (
         <AddLessonStyled>
             <WrapperButton>
-                <ButtonStyled
-                    onClick={handleOk}
-                    size='large'
-                    shape='circle'
-                    icon={<PlusOutlined />}
-                    color='#009b77' />
-            </WrapperButton>
+                <Popover
+                    trigger="click"
+                    content={
+                        <>
+                            <div >
+                                <ButtonStyled
+                                    onClick={handleOk}
+                                    shape='circle'
+                                    icon={<PlusOutlined />}
+                                    color='#0074D9' >
+                                </ButtonStyled>
+                            </div>
+                            <div style={{ margin: '10px 0' }}>
+                                <ButtonStyled
+                                    icon={<EditOutlined />}
+                                    shape='circle'
+                                    color='#FFDC00'>
+                                </ButtonStyled>
+
+                            </div>
+                            <div>
+                                <ButtonStyled
+                                    icon={<DeleteOutlined />}
+                                    shape='circle'
+                                    color='#FF4136'>
+                                </ButtonStyled>
+
+                            </div>
+                        </>
+
+                    }
+                >
+                    <ButtonStyled
+                        // onClick={handleOk}
+                        size='large'
+                        shape='circle'
+                        icon={<SettingOutlined />}
+                        color='#001f3f' />
+
+                </Popover >
+            </WrapperButton >
             <Modal
                 footer={false}
                 visible={isVisible}
@@ -104,14 +138,14 @@ function AddLesson(props) {
                         listType='picture-card'
                         accept={['image/png', 'image/jpeg']}
                     />
+
                     <ButtonStyled
-                        color='#0074D9'
-                        htmlType="submit">
+                        color='#0074D9'>
                         Thêm
                     </ButtonStyled>
                 </Form>
-            </Modal>
-        </AddLessonStyled>
+            </Modal >
+        </AddLessonStyled >
     );
 }
 
