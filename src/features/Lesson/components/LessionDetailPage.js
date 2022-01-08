@@ -9,7 +9,6 @@ import Category from './Category';
 import { CustomerServiceOutlined, HistoryOutlined, InfoOutlined, MenuOutlined, NotificationOutlined, PlusOutlined, PlusSquareOutlined, SendOutlined, SwapOutlined } from '@ant-design/icons/lib/icons';
 import SideBar from './SideBar';
 import { ButtonStyled } from 'assets/images/styles/GobalStyled';
-import ToolBox from './ToolBox';
 
 LessionDetailPage.propTypes = {
 
@@ -222,7 +221,6 @@ function LessionDetailPage(props) {
                     </Wrapper>
                 </Col>
             </Row>
-            <ToolBox />
         </LessionDetailStyled>
     );
 }

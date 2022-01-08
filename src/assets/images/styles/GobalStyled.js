@@ -1,4 +1,4 @@
-import { Button } from "antd";
+import { Button, Form } from "antd";
 import styled from "styled-components";
 
 const Title = styled.h3`
@@ -18,4 +18,18 @@ const ButtonStyled = styled(Button)`
     }
 `;
 
-export { Title, ButtonStyled }
+const FormItemStyled = styled(Form.Item)`
+    .ant-form-item-explain-error{
+        font-size:80%;
+        margin-top:3px;
+    }
+
+   margin-bottom:14px;
+   label{
+       font-size:15px;
+       font-style:italic;
+   } 
+
+`;
+
+export { Title, ButtonStyled, FormItemStyled }
