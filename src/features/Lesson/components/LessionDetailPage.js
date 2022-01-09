@@ -10,6 +10,8 @@ import { CustomerServiceOutlined, HistoryOutlined, InfoOutlined, MenuOutlined, N
 import SideBar from './SideBar';
 import { ButtonStyled } from 'assets/images/styles/GobalStyled';
 import AddNewWord from './AddNewWord';
+import ListenAll from './ListenAll';
+import AddLesson from './AddLesson';
 
 LessionDetailPage.propTypes = {
 
@@ -150,13 +152,9 @@ function LessionDetailPage(props) {
                         </GroupContent>
 
                         <GroupContent>
-                            <Category icon={<MenuOutlined />} title="Các chế độ khác" />
+                            <Category icon={<MenuOutlined />} title="Nghe liên tục" />
                             <div style={{ marginLeft: '2rem' }}>
-                                <ButtonStyled
-                                    icon={<NotificationOutlined />}
-                                    color='#e35a15'>
-                                    Nghe tất cả
-                                </ButtonStyled>
+                                <ListenAll />
                             </div>
                         </GroupContent>
                         <GroupContent>
@@ -210,6 +208,7 @@ function LessionDetailPage(props) {
                     </Wrapper>
                 </Col>
             </Row>
+            <AddLesson />
         </LessionDetailStyled>
     );
 }

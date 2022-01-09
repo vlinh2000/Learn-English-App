@@ -26,7 +26,6 @@ function Lession(props) {
                 <Route path=":lessonId" element={<LessionDetailPage />} />
                 <Route path="*" element={<div>Not found</div>}></Route>
             </Routes>
-            <AddLesson />
         </div>
     );
 }
