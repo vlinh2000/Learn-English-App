@@ -4,14 +4,18 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import { images } from 'contants/images';
 import styled from 'styled-components';
 import ListWord from './ListWord';
-import { Button, Col, Pagination, Popover, Row, Switch, Tooltip } from 'antd';
+import { Button, Col, message, Pagination, Popover, Row, Switch, Tooltip } from 'antd';
 import Category from './Category';
 import { CustomerServiceOutlined, HistoryOutlined, InfoOutlined, MenuOutlined, NotificationOutlined, PlusOutlined, PlusSquareOutlined, SendOutlined, SwapOutlined } from '@ant-design/icons/lib/icons';
 import SideBar from './SideBar';
-import { ButtonStyled } from 'assets/images/styles/GobalStyled';
-import AddNewWord from './AddNewWord';
+import { ButtonStyled } from 'assets/styles/GobalStyled';
 import ListenAll from './ListenAll';
-import AddLesson from './AddLesson';
+import AddNewWord from './AddNewWord';
+import { MdAssignmentReturn } from 'react-icons/md';
+import { LessonApi } from 'api/LessonApi';
+import { useSelector } from 'react-redux';
+import { fetchWords } from '../LessionSlice';
+import { useDispatch } from 'react-redux';
 
 LessionDetailPage.propTypes = {
 
@@ -104,32 +108,78 @@ const LinkStyled = styled(Link)`
 `;
 
 function LessionDetailPage(props) {
-    const params = useParams();
+    const { lessonId } = useParams();
     const navigate = useNavigate();
 
+    const dispatch = useDispatch();
+
+    const [lesson, setLesson] = React.useState();
+
+    const { lessons } = useSelector(state => state.homeInfo);
+
+    const { words } = useSelector(state => state.homeInfo);
+
+    const [timeCount, setTimeCount] = React.useState();
+
     const handleOnchangeLesson = page => {
-        navigate(`/lession/${page}`, { replace: true });
+        navigate(`/lession/${lessons[page]._id}`, { replace: true });
     }
 
-    // const [isEdit , setIsEdit] = React.useState(false);
+    React.useEffect(() => {
+        const fetchLesson = async () => {
+            try {
+                const response = await LessonApi.get(lessonId);
+                setLesson(response.lesson);
+                setTimeCount(response.lesson.time);
+            } catch (error) {
+                message.error(error);
+            }
+        }
+
+
+        fetchLesson();
+        dispatch(fetchWords({ lessonId }));
+    }, [lessonId])
+
+    const handleCount = () => {
+        setTimeCount(prev => prev + 1);
+
+        const postIncreaseListenTime = async () => {
+            try {
+                await LessonApi.patch(lessonId, { time: 1 });
+            } catch (error) {
+                console.log(error);
+            }
+        }
+        postIncreaseListenTime();
+    }
+
 
     return (
         <LessionDetailStyled>
+            <Link to="/">
+                <Tooltip title="Trở lại">
+                    <ButtonStyled
+                        color='#0074D9'
+                        style={{ marginBottom: 10 }}
+                        icon={<MdAssignmentReturn />}
+                        shape='circle' />
+                </Tooltip>
+            </Link>
             <Row gutter={[20, 20]}>
                 <Col lg={{ span: 8 }} md={{ span: 12 }} sm={{ span: 24 }} xs={{ span: 24 }}>
                     <Wrapper>
-                        <PictureStyled src={images.EXAMPLE} alt='img' />
+                        <PictureStyled src={lesson?.image} alt='img' />
                     </Wrapper>
 
                 </Col>
                 <Col lg={{ span: 8 }} md={{ span: 12 }} sm={{ span: 24 }} xs={{ span: 24 }}>
                     <Wrapper>
                         <Category icon={<CustomerServiceOutlined />} title="Âm thanh" />
-                        <AudioStyled controls src='https://f9-stream.nixcdn.com/NhacCuaTui1025/ThichThiToTinh-AnieNhuThuyHoangRapper-7124599.mp3?st=Q25W1HpVOveVMFfx-t62qQ&e=1641527376&t=1641440966985'></AudioStyled>
+                        <AudioStyled onEnded={handleCount} controls src={lesson?.audio} />
 
-                        <Category icon={<HistoryOutlined />} title="Các từ mới (5)" color="#001f3f" />
-                        <ListWord />
-                        <AddNewWord />
+                        <Category icon={<HistoryOutlined />} title={`Các từ mới (${words.length})`} color="#001f3f" />
+                        <ListWord words={words} />
 
                     </Wrapper>
                 </Col>
@@ -139,15 +189,15 @@ function LessionDetailPage(props) {
                             <Category icon={<InfoOutlined />} title="Thông tin bài học" />
                             <div>
                                 <CateInfo>Ngày tạo:</CateInfo>
-                                <Info>10:20 1/7/2022</Info>
+                                <Info>{lesson?.createAt}</Info>
                             </div>
                             <div>
                                 <CateInfo>Số lần nghe:</CateInfo>
-                                <Info>10</Info>
+                                <Info>{timeCount}</Info>
                             </div>
                             <div>
                                 <CateInfo>Tên chủ sở hữu:</CateInfo>
-                                <Info>Trương Việt Linh</Info>
+                                <Info>{lesson?.author}</Info>
                             </div>
                         </GroupContent>
 
@@ -160,11 +210,11 @@ function LessionDetailPage(props) {
                         <GroupContent>
                             <Category icon={<SwapOutlined />} title="Chuyển bài học" />
                             <div style={{ marginLeft: '2rem' }}>
-                                <PaginationStyled
+                                {/* <PaginationStyled
                                     showLessItems
                                     onChange={(page) => handleOnchangeLesson(page)}
                                     pageSize={1}
-                                    total={10} />
+                                    total={lessons.length} /> */}
 
                                 <Popover
                                     title="Danh sách bài học"
@@ -172,27 +222,9 @@ function LessionDetailPage(props) {
                                     placement='left'
                                     content={
                                         <div style={{ maxWidth: 380, maxHeight: 500, overflowY: 'auto' }}>
-                                            <Tooltip title="A picnic by the River">
-                                                <LinkStyled to="/lession/1">Bài 1</LinkStyled>
-                                            </Tooltip>
-                                            <Tooltip title="A picnic by the River">
-                                                <LinkStyled to="/lession/2">Bài 2</LinkStyled>
-                                            </Tooltip>
-                                            <Tooltip title="A picnic by the River">
-                                                <LinkStyled to="/lession/3">Bài 3</LinkStyled>
-                                            </Tooltip>
-                                            <Tooltip title="A picnic by the River">
-                                                <LinkStyled to="/lession/4">Bài 4</LinkStyled>
-                                            </Tooltip>
-                                            <Tooltip title="A picnic by the River">
-                                                <LinkStyled to="/lession/5">Bài 5</LinkStyled>
-                                            </Tooltip>
-                                            <Tooltip title="A picnic by the River">
-                                                <LinkStyled to="/lession/6">Bài 6</LinkStyled>
-                                            </Tooltip>
-                                            <Tooltip title="A picnic by the River">
-                                                <LinkStyled to="/lession/7">Bài 7</LinkStyled>
-                                            </Tooltip>
+                                            {lessons?.map((ls, index) => <Tooltip title={ls.name}>
+                                                <LinkStyled to={`/lession/${ls._id}`} >Bài {index + 1}</LinkStyled>
+                                            </Tooltip>)}
                                         </div>}
                                 >
                                     <ButtonStyled
@@ -208,7 +240,6 @@ function LessionDetailPage(props) {
                     </Wrapper>
                 </Col>
             </Row>
-            <AddLesson />
         </LessionDetailStyled>
     );
 }

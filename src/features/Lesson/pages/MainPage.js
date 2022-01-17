@@ -1,11 +1,7 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import { Button, Card, Col, Row, Space } from 'antd';
-import { images } from 'contants/images';
-
-import styled from 'styled-components';
-import SideBar from '../components/SideBar';
 import ListItem from '../components/ListItem';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchLessons, GetLessons } from '../LessionSlice';
 
 MainPage.propTypes = {
 
@@ -14,14 +10,12 @@ MainPage.propTypes = {
 
 
 function MainPage(props) {
+    const dispatch = useDispatch();
+    const { lessons } = useSelector(state => state.homeInfo);
 
-    const lessons =
-        [
-            { _id: 1, title: "Bài 1 : Picnic on the river", description: "Ngày học : 10:22 1/9/2022", image: "https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png" },
-            { _id: 2, title: "Bài 1 : Picnic on the river", description: "Ngày học : 10:22 1/9/2022", image: "https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png" },
-            { _id: 3, title: "Bài 1 : Picnic on the river", description: "Ngày học : 10:22 1/9/2022", image: "https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png" },
-            { _id: 4, title: "Bài 1 : Picnic on the river", description: "Ngày học : 10:22 1/9/2022", image: "https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png" }
-        ]
+    React.useEffect(() => {
+        dispatch(fetchLessons());
+    }, [])
 
     return (
         <div style={{ width: "90%", margin: '3rem auto' }}>

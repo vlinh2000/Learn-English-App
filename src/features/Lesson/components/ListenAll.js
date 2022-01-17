@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Col, Modal, Radio, Row, Select, Space } from 'antd';
-import { ButtonStyled } from 'assets/images/styles/GobalStyled';
+import { ButtonStyled } from 'assets/styles/GobalStyled';
 import { MenuOutlined, NotificationOutlined } from '@ant-design/icons/lib/icons';
 import styled from 'styled-components';
 

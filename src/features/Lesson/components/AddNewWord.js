@@ -1,11 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Button, Form, Popover } from 'antd';
+import { Button, Form, message, Popover } from 'antd';
 import InputField from 'custom-fields/InputField';
-import { PlusSquareOutlined, SaveOutlined } from '@ant-design/icons/lib/icons';
+import { BackwardOutlined, PlusSquareOutlined, SaveOutlined } from '@ant-design/icons/lib/icons';
 import styled from 'styled-components';
-import { ButtonStyled } from 'assets/images/styles/GobalStyled';
+import { ButtonStyled } from 'assets/styles/GobalStyled';
 import { MdSave } from 'react-icons/md';
+import { WordApi } from 'api/WordApi';
+import { fetchWords } from '../LessionSlice';
+import { useDispatch } from 'react-redux';
+import { useParams } from 'react-router-dom';
 
 AddNewWord.propTypes = {
 
@@ -28,6 +32,14 @@ const AddButton = styled(Button)`
 
 function AddNewWord(props) {
 
+    const { isEdit, word, isVisible, setIsVisible, onAdd } = props;
+
+    const [isLoading, setIsLoading] = React.useState();
+
+    const { lessonId } = useParams();
+
+    const dispatch = useDispatch()
+
     const [form] = Form.useForm();
 
     const initialValues = {
@@ -35,9 +47,49 @@ function AddNewWord(props) {
         mean: ''
     }
 
+    const handleAdd = () => {
+        onAdd();
+    }
+
+    React.useEffect(() => {
+        isEdit ? form.setFieldsValue({
+            word: word?.word,
+            mean: word?.mean
+        }) : form.setFieldsValue({
+            word: '',
+            mean: ''
+        })
+    }, [isEdit, word])
+
     const handleSubmit = values => {
-        console.log(values);
-        form.resetFields();
+        const onAddNewWord = async () => {
+            try {
+                setIsLoading(true);
+                const response = await WordApi.add({ ...values, lessonId });
+                message.success(response.message);
+                setIsLoading(false);
+                form.resetFields();
+                dispatch(fetchWords({ lessonId }));
+            } catch (error) {
+                console.log(error);
+                setIsLoading(false);
+            }
+        }
+
+        const onUpdateWord = async () => {
+            try {
+                setIsLoading(true);
+                const response = await WordApi.patch(word?._id, values);
+                message.success(response.message);
+                setIsLoading(false);
+                dispatch(fetchWords({ lessonId }));
+            } catch (error) {
+                console.log(error);
+                setIsLoading(false);
+            }
+        }
+
+        isEdit ? onUpdateWord() : onAddNewWord();
     }
 
 
@@ -45,12 +97,13 @@ function AddNewWord(props) {
         <Popover
             trigger="click"
             title="Thêm từ mới"
+            visible={isVisible}
             content={
                 <Form
                     initialValues={initialValues}
                     style={{ width: 300, padding: "0.25rem 1rem 1rem 1rem" }}
                     layout='vertical'
-                    onFinish={handleSubmit}
+                    onFinish={(values) => handleSubmit(values)}
                     form={form}
                 >
                     <InputField
@@ -62,16 +115,27 @@ function AddNewWord(props) {
                         label='Nghĩa' />
 
                     <ButtonStyled
+                        loading={isLoading}
                         style={{ marginTop: 20 }}
                         icon={<SaveOutlined />}
                         color='#F012BE'
                         htmlType='submit' >
                         Lưu
                     </ButtonStyled>
+
+                    <ButtonStyled
+                        onClick={() => setIsVisible(false)}
+                        style={{ marginTop: 20 }}
+                        icon={<BackwardOutlined />}
+                        color='#FF4136' >
+                        Thoát
+                    </ButtonStyled>
                 </Form>
             }
         >
-            <AddButton icon={<PlusSquareOutlined />}>Thêm từ</AddButton>
+            <AddButton
+                onClick={handleAdd}
+                icon={<PlusSquareOutlined />}>Thêm từ</AddButton>
         </Popover>
     );
 }

@@ -1,13 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { Popover } from 'antd';
-import { ButtonStyled } from 'assets/images/styles/GobalStyled';
+import { Popconfirm, Popover } from 'antd';
+import { ButtonStyled } from 'assets/styles/GobalStyled';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons/lib/icons';
 
 Word.propTypes = {
 
 };
+
 const ContentInner = styled.div`
         position: relative;
         width: 100%;
@@ -54,19 +55,25 @@ const ContentBack = styled.div`
 `;
 
 function Word(props) {
+    const { word, onEdit, onDelete, isLoading } = props;
+
+    const [isVisible, setIsVisible] = React.useState(false);
 
     const handleDelete = () => {
-        console.log("delete")
+        onDelete(word._id);
+        setIsVisible(false);
     }
 
     const handleEdit = () => {
-        console.log("Edit")
+        onEdit(word._id);
+        setIsVisible(false);
     }
 
 
     return (
         <Popover
             trigger="click"
+            visible={isVisible}
             content={
                 <>
                     <div style={{ marginBottom: 10 }}>
@@ -77,22 +84,26 @@ function Word(props) {
                             icon={<EditOutlined />} />
                     </div>
                     <div>
-                        <ButtonStyled
-                            onClick={handleDelete}
-                            color='#FF4136'
-                            shape='circle'
-                            icon={<DeleteOutlined />} />
+                        <Popconfirm
+                            onConfirm={() => handleDelete()}
+                            title={`Bạn có chắc muốn xóa từ [ ${word.word} ] ?`}>
+                            <ButtonStyled
+                                color='#FF4136'
+                                shape='circle'
+                                loading={isLoading}
+                                icon={<DeleteOutlined />} />
+                        </Popconfirm>
                     </div>
                 </>
             }
         >
-            <NewWord>
+            <NewWord onClick={() => setIsVisible(true)}>
                 <ContentInner>
                     <ContentFont>
-                        spot
+                        {word?.word}
                     </ContentFont>
                     <ContentBack>
-                        Chổ ở
+                        {word?.mean}
                     </ContentBack>
                 </ContentInner>
             </NewWord>

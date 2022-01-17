@@ -10,6 +10,7 @@ const Title = styled.h3`
 const ButtonStyled = styled(Button)`
     color:${props => props.color};
     border:1px solid ${props => props.color};
+    margin-right:1rem;
     
     &:hover,&:active{
         color:${props => props.color};

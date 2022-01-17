@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Form, Input } from 'antd';
 import styled from 'styled-components';
-import { FormItemStyled } from 'assets/images/styles/GobalStyled';
+import { FormItemStyled } from 'assets/styles/GobalStyled';
 
 InputField.propTypes = {
     name: PropTypes.string,

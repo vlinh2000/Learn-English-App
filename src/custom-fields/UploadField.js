@@ -1,9 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { FormItemStyled } from 'assets/images/styles/GobalStyled';
+import { FormItemStyled } from 'assets/styles/GobalStyled';
 import { message as messageNotif, Button, Upload } from 'antd';
 import { UploadOutlined } from '@ant-design/icons/lib/icons';
-import { FormStore } from 'rc-field-form/es/useForm';
 
 import { MdCloudUpload } from "react-icons/md"
 
