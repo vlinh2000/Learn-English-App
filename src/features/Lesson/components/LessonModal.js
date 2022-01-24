@@ -38,7 +38,7 @@ function LessonModal(props) {
 
     const initialValues = {
         name: '',
-        author: '',
+        author: 'Việt Linh',
         audio: null,
         image: null
     }

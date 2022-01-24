@@ -100,11 +100,11 @@ function AddNewWord(props) {
             visible={isVisible}
             content={
                 <Form
+                    form={form}
                     initialValues={initialValues}
                     style={{ width: 300, padding: "0.25rem 1rem 1rem 1rem" }}
                     layout='vertical'
                     onFinish={(values) => handleSubmit(values)}
-                    form={form}
                 >
                     <InputField
                         name='word'

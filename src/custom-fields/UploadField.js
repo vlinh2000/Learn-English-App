@@ -51,6 +51,7 @@ function UploadField(props) {
                 beforeUpload={handleBeforeUpload}
                 maxCount={maxCount}
                 accept={accept}
+                defaultFileList={[]}
                 listType={listType}>
 
                 <Button

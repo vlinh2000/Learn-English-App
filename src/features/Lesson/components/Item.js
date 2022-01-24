@@ -4,7 +4,10 @@ import styled from 'styled-components';
 import { Card, Popconfirm } from 'antd';
 import { Link } from 'react-router-dom';
 import { images } from 'contants/images';
-import { DeleteOutlined, EditOutlined, EllipsisOutlined, EyeOutlined, SettingOutlined } from '@ant-design/icons/lib/icons';
+import { DeleteOutlined, EditOutlined, EyeOutlined } from '@ant-design/icons/lib/icons';
+import { MdHeadphones, MdOutlineHeadphones } from "react-icons/md";
+import { format } from 'date-fns';
+import moment from 'moment';
 
 Item.propTypes = {
     lesson: PropTypes.object
@@ -18,13 +21,37 @@ Item.defaultProps = {
 const Wrapper = styled.div`
     width:20%;
     display: inline-block;
-    marginBottom: 20;
+    margin-bottom: 20px;
     padding: 0 10px;
+`;
+
+const TimeCount = styled.div`
+    font-size:10px;
+    margin-top:5px;
 `;
 
 const CardStyled = styled(Card)`
     padding: 5px 10px;
-    border:1px solid #39CCCC;
+    background: linear-gradient(
+        to left top,
+        rgba(255, 255, 255, 0.8),
+        rgba(255, 255, 255, 0.5)
+      );
+      box-shadow: 6px 6px 20px rgba(122, 122, 122, 0.2);
+
+      .ant-card-body{
+          padding:15px;
+      }
+
+      .ant-card-meta-title{
+          font-size:12px;
+          color:#426696;
+          margin-bottom:0px!important;
+      }
+
+      .ant-card-meta-description{
+        font-size:11px;
+      }
 `;
 
 function Item(props) {
@@ -38,13 +65,13 @@ function Item(props) {
     const handleEdit = () => {
         onEdit(lesson._id);
     }
-
+    moment.locale("vi");
 
     return (
         <Wrapper>
             <CardStyled
                 hoverable
-                cover={<img alt="image" width={100} height={270} src={lesson.image} />}
+                cover={<img alt="image" src={"https://res.cloudinary.com/vlinh/image/upload/v1642504045/files_learn_english_app/banner_ngaewu.png"} />}
                 actions={[
                     <EditOutlined key="edit" onClick={handleEdit} />,
                     <Popconfirm
@@ -56,7 +83,8 @@ function Item(props) {
                         <EyeOutlined key="view" />
                     </Link>,
                 ]}>
-                <Card.Meta title={lesson.name} description={lesson.createAt} />
+                <Card.Meta title={lesson.name} description={moment(lesson.createAt).format('DD-MM-yyyy h:mm a')} />
+                <TimeCount><MdOutlineHeadphones /> {lesson.time} </TimeCount>
             </CardStyled>
         </Wrapper>
 

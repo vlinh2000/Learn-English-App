@@ -1,3 +1,31 @@
 .App {
-  margin: 0.5rem 0;
+  /* margin: 0.5rem 0; */
+  background: linear-gradient(to right top, #65dfc9, #6cdbeb);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+.circle1,
+.circle2 {
+  background: white;
+  background: linear-gradient(to right bottom, rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.3));
+  height: 10rem;
+  width: 10rem;
+  position: absolute;
+  border-radius: 50%;
+}
+
+.circle1 {
+  top: 5%;
+  right: 2%;
+}
+.circle2 {
+  bottom: 5%;
+  left: 1%;
+}
+
+.active {
+  background-color: #ffdc00 !important;
 }

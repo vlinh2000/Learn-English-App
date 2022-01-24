@@ -26,6 +26,16 @@ export const fetchWords = createAsyncThunk("lesson/fetchWords", async (params, {
 
 })
 
+export const increaseListenTime = createAsyncThunk("lesson/increaseListenTime", async (params, { fulfillWithValue, rejectWithValue }) => {
+    try {
+        await LessonApi.patch(params, { time: 1 });
+        return fulfillWithValue(true);
+    } catch (error) {
+        return rejectWithValue(error);
+    }
+
+})
+
 const initialState =
 {
     lessons: [],
@@ -59,6 +69,17 @@ const lesson = createSlice({
             state.words = action.payload;
         },
         [fetchWords.rejected]: (state, action) => {
+            state.isLoading = false;
+            state.error = action.error;
+        },
+        //post increase  listen time
+        [increaseListenTime.pending]: (state) => {
+            state.isLoading = true;
+        },
+        [increaseListenTime.fulfilled]: (state, action) => {
+            state.isLoading = false;
+        },
+        [increaseListenTime.rejected]: (state, action) => {
             state.isLoading = false;
             state.error = action.error;
         },

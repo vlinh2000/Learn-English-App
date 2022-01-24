@@ -3,19 +3,20 @@ import PropTypes from 'prop-types';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { images } from 'contants/images';
 import styled from 'styled-components';
-import ListWord from './ListWord';
+import ListWord from '../components/ListWord';
 import { Button, Col, message, Pagination, Popover, Row, Switch, Tooltip } from 'antd';
-import Category from './Category';
+import Category from '../components/Category';
 import { CustomerServiceOutlined, HistoryOutlined, InfoOutlined, MenuOutlined, NotificationOutlined, PlusOutlined, PlusSquareOutlined, SendOutlined, SwapOutlined } from '@ant-design/icons/lib/icons';
-import SideBar from './SideBar';
+import SideBar from '../components/SideBar';
 import { ButtonStyled } from 'assets/styles/GobalStyled';
-import ListenAll from './ListenAll';
-import AddNewWord from './AddNewWord';
+import ListenAll from '../components/ListenAll';
+import AddNewWord from '../components/AddNewWord';
 import { MdAssignmentReturn } from 'react-icons/md';
 import { LessonApi } from 'api/LessonApi';
 import { useSelector } from 'react-redux';
-import { fetchWords } from '../LessionSlice';
+import { fetchWords, increaseListenTime } from '../LessionSlice';
 import { useDispatch } from 'react-redux';
+import moment from 'moment';
 
 LessionDetailPage.propTypes = {
 
@@ -30,12 +31,16 @@ const AudioStyled = styled.audio`
     width:100%;
     padding:0 2rem;
     margin-bottom:1rem;
+
+    &::-webkit-media-controls-panel {
+        background: linear-gradient(to right top, #658ec6, #6cdbeb);
+    }
 `;
 
 const PictureStyled = styled.img`
-    object-fit: cover;
-    width:100%;
-    height:100%;
+    object-fit: contain;
+    max-width: 100%;
+    max-height: 100%;
     `;
 
 const Wrapper = styled.div`
@@ -45,7 +50,13 @@ const Wrapper = styled.div`
     height:100%;
     width:100%;
     min-height:500px;
+    border-radius:2rem;
     margin-right:2rem;
+    background: ${props => props.color || `linear-gradient(
+        to left top,
+        rgba(255, 255, 255, 0.8),
+        rgba(255, 255, 255, 0.5)
+      );` } 
 `;
 
 
@@ -68,36 +79,6 @@ const Info = styled.span`
     color:#FF4136;
 `;
 
-const PaginationStyled = styled(Pagination)`
-    margin:2rem 0;
-    
-    li,.ant-pagination-item-link{
-        border:none;
-        border-radius:50%!important;
-
-        &:not([disabled]):hover{
-                    background:#EEE;
-                    color:#111;
-                }
-            }
-
-    .ant-pagination-item:not(.ant-pagination-item-active):hover{
-        background:#EEE;
-        a{
-            color:#111;
-        }
-    }
-
-    .ant-pagination-item-active a{
-        color:#FFF;
-    } 
-    .ant-pagination-item-active{
-        background:#FF851B;
-        border-color:#FF851B;
-    }
-
-`;
-
 const LinkStyled = styled(Link)`
     padding: 5px 10px;
     background:#de4b6b;   
@@ -105,6 +86,12 @@ const LinkStyled = styled(Link)`
     color:#FFF;
     border-radius:5px;
     display:inline-block;
+`;
+
+const BackButton = styled(Link)`
+    position:absolute;
+    top:20px;
+    left:20px;
 `;
 
 function LessionDetailPage(props) {
@@ -143,21 +130,13 @@ function LessionDetailPage(props) {
 
     const handleCount = () => {
         setTimeCount(prev => prev + 1);
-
-        const postIncreaseListenTime = async () => {
-            try {
-                await LessonApi.patch(lessonId, { time: 1 });
-            } catch (error) {
-                console.log(error);
-            }
-        }
-        postIncreaseListenTime();
+        dispatch(increaseListenTime(lessonId));
     }
 
 
     return (
         <LessionDetailStyled>
-            <Link to="/">
+            <BackButton to="/">
                 <Tooltip title="Trở lại">
                     <ButtonStyled
                         color='#0074D9'
@@ -165,10 +144,10 @@ function LessionDetailPage(props) {
                         icon={<MdAssignmentReturn />}
                         shape='circle' />
                 </Tooltip>
-            </Link>
+            </BackButton>
             <Row gutter={[20, 20]}>
                 <Col lg={{ span: 8 }} md={{ span: 12 }} sm={{ span: 24 }} xs={{ span: 24 }}>
-                    <Wrapper>
+                    <Wrapper color='#FFF'>
                         <PictureStyled src={lesson?.image} alt='img' />
                     </Wrapper>
 
@@ -189,7 +168,7 @@ function LessionDetailPage(props) {
                             <Category icon={<InfoOutlined />} title="Thông tin bài học" />
                             <div>
                                 <CateInfo>Ngày tạo:</CateInfo>
-                                <Info>{lesson?.createAt}</Info>
+                                <Info>{moment(lesson?.createAt).format('DD-MM-yyyy h:mm a')}</Info>
                             </div>
                             <div>
                                 <CateInfo>Số lần nghe:</CateInfo>
@@ -210,20 +189,14 @@ function LessionDetailPage(props) {
                         <GroupContent>
                             <Category icon={<SwapOutlined />} title="Chuyển bài học" />
                             <div style={{ marginLeft: '2rem' }}>
-                                {/* <PaginationStyled
-                                    showLessItems
-                                    onChange={(page) => handleOnchangeLesson(page)}
-                                    pageSize={1}
-                                    total={lessons.length} /> */}
-
                                 <Popover
                                     title="Danh sách bài học"
                                     trigger="click"
                                     placement='left'
                                     content={
                                         <div style={{ maxWidth: 380, maxHeight: 500, overflowY: 'auto' }}>
-                                            {lessons?.map((ls, index) => <Tooltip title={ls.name}>
-                                                <LinkStyled to={`/lession/${ls._id}`} >Bài {index + 1}</LinkStyled>
+                                            {lessons?.map((ls, index) => <Tooltip key={index} title={ls.name}>
+                                                <LinkStyled className={lessonId === ls._id && "active"} to={`/lession/${ls._id}`} >Bài {index + 1}</LinkStyled>
                                             </Tooltip>)}
                                         </div>}
                                 >

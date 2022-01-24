@@ -25,7 +25,7 @@ const NewWord = styled.div`
     font-weight:bold;
     word-wrap:break-word;
     border-radius:10px;
-    width: 20%;
+    width: 25%;
     text-align:center;
     cursor:pointer;
     height:80px;

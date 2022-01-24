@@ -4,7 +4,7 @@ import Item from './Item';
 import AddLesson from './AddLesson';
 import LessonModal from './LessonModal';
 import { LessonApi } from 'api/LessonApi';
-import { message } from 'antd';
+import { Carousel, message } from 'antd';
 import { fetchLessons } from '../LessionSlice';
 import { useDispatch } from 'react-redux';
 

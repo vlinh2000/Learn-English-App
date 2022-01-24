@@ -9,6 +9,9 @@ import devuong from 'assets/images/DeVuong-DinhDungACV-7121634.mp3'
 import bai2 from 'assets/images/NguoiThuongEmCaDoiXuaDuoi-NhVit-7120935.mp3'
 import Category from './Category';
 import Search from 'antd/lib/input/Search';
+import { useDispatch, useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
+import { increaseListenTime } from '../LessionSlice';
 
 ListenAll.propTypes = {
 
@@ -21,19 +24,23 @@ const ContentStyled = styled.div`
 
 function ListenAll(props) {
     const [isVisible, setIsVisible] = React.useState();
-
     const [currentAudio, setCurrentAudio] = React.useState(0);
-
+    //choose option
     const [currentCheckBox, setCurrentCheckBox] = React.useState(-1);
+    const [list, setList] = React.useState([]);
+    const { lessons } = useSelector(state => state.homeInfo);
+    const dispatch = useDispatch()
 
-    const [currentList, setCurrentList] = React.useState([]);
 
-    const [list] = React.useState([devuong, bai2]);
-
+    React.useEffect(() => {
+        let sortLesson = [...lessons].sort((a, b) => new Date(b.createAt) - new Date(a.createAt));
+        currentCheckBox > 1 && setList(sortLesson.slice(0, currentCheckBox));
+        currentCheckBox === -1 && setList(sortLesson);
+    }, [currentCheckBox]);
 
     const handlePlayDone = () => {
-        console.log("Đã play xong");
-        setCurrentAudio(prev => prev + 1);
+        dispatch(increaseListenTime(list[currentAudio]._id));
+        setCurrentAudio(prev => (prev + 1) % list.length);
     }
 
     const getAudio = () => {
@@ -50,21 +57,21 @@ function ListenAll(props) {
         setIsVisible(true);
 
         let audio = getAudio();
-        audio.currentTime > 0 && audio.play();
+        audio?.currentTime > 0 && audio.play();
     }
 
     const handleSearch = values => {
-        console.log(values);
+        let currentLessonChoosen = [...lessons].sort((a, b) => new Date(b.createAt) - new Date(a.createAt)).filter(lesson => values.includes(lesson._id));
+        setList(currentLessonChoosen);
     }
 
     const handleCheckBox = ({ target: { value } }) => {
         setCurrentCheckBox(value)
-        console.log(value);
     }
 
-    React.useEffect(() => {
-        console.log(currentCheckBox);
-    }, currentCheckBox)
+    const Options = React.useMemo(() => {
+        return [...lessons].map((lesson) => <Select.Option key={lesson._id}>{lesson.name}</Select.Option>)
+    }, [lessons])
 
     return (
         <div>
@@ -90,13 +97,11 @@ function ListenAll(props) {
 
                     <Select
                         mode='multiple'
-                        allowClear
                         placeholder="Nhập tên bài học"
                         onChange={handleSearch}
-                        defaultValue={['a10', 'c12']}
-                        style={{ width: '100%', marginBottom: 10 }}
+                        style={{ width: '100%', marginBottom: 10, minHeight: 100 }}
                     >
-                        {/* {children} */}
+                        {Options}
                     </Select>
 
                 }
@@ -104,7 +109,7 @@ function ListenAll(props) {
 
 
             <Modal
-                title={<h4><NotificationOutlined /> [ Bài 1: Picnic on the river ]</h4>}
+                title={<h4><NotificationOutlined /> [ {list.length > 0 && list[currentAudio].name} ]</h4>}
                 visible={isVisible}
                 onCancel={handleClose}
                 footer={false}
@@ -120,7 +125,7 @@ function ListenAll(props) {
                         onEnded={handlePlayDone}
                         autoPlay
                         controls
-                        src={list[currentAudio]} />
+                        src={list.length > 0 && list[currentAudio].audio} />
                 </ContentStyled>
             </Modal>
 

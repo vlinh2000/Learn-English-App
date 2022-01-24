@@ -9,7 +9,7 @@ Category.propTypes = {
 const CategoryStyled = styled.div`
     font-size:16px;
     font-weight:bold;
-    color:${props => props.color || "#000"};
+    color:${props => props.color || "#426696"};
     margin:0 0 1rem 0.5rem;
 `;
 

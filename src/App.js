@@ -10,10 +10,11 @@ function App() {
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Navigate to="lession" replace />} />
-
             <Route path="lession/*" element={<Lession />} />
             <Route path="*" element={<div>Not found</div>}></Route>
           </Routes>
+          <div className='circle1' />
+          <div className='circle2' />
         </BrowserRouter>
       </Suspense>
     </div>
