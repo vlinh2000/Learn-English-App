@@ -7,5 +7,10 @@ This is an app helps people to practice listening skill easy way.
 ### `Knowledge`
 
 - React JS.
-- .
-- .
+- Redux toolkit.
+- Antd.
+- React persist.
+- MongoDB.
+
+### `Demo`
+- https://learn-english00.surge.sh.
