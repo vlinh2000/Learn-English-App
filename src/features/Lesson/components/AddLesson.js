@@ -6,40 +6,39 @@ import styled from 'styled-components';
 import { Button, Form, Input, message, Modal, Popover, Upload } from 'antd';
 import InputField from 'custom-fields/InputField';
 import UploadField from 'custom-fields/UploadField';
+import { useDispatch } from 'react-redux';
+import { setIsEdit, switchAddLessonModal } from '../lessionSlice';
 
 AddLesson.propTypes = {
 
 };
 
-const AddLessonStyled = styled.div``;
 
 const WrapperButton = styled.div`
     position:fixed;
-    bottom:30px;
-    right:30px;
+    bottom:10px;
+    right:10px;
 `;
 
 
 function AddLesson(props) {
+    const dispatch = useDispatch();
 
-    const { onAdd } = props;
-
-    const handleOk = () => {
-        onAdd();
+    const handleOpenModal = () => {
+        dispatch(switchAddLessonModal(true));
+        dispatch(setIsEdit(false));
     }
 
     return (
-        <AddLessonStyled>
-            <WrapperButton>
-                <ButtonStyled
-                    onClick={handleOk}
-                    shape='circle'
-                    icon={<PlusOutlined />}
-                    color='#0074D9' >
-                </ButtonStyled>
-            </WrapperButton >
+        <WrapperButton>
+            <ButtonStyled
+                onClick={() => handleOpenModal()}
+                shape='circle'
+                icon={<PlusOutlined />}
+                color='#0074D9' >
+            </ButtonStyled>
+        </WrapperButton >
 
-        </AddLessonStyled >
     );
 }
 

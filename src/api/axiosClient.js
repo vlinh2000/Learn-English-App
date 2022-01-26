@@ -11,9 +11,9 @@ const axiosClient = axios.create({
 
 axiosClient.interceptors.request.use(async config => {
     //handle token
-    // const token = "dsadadsadsad";
-    // config.headers.Authorization = `Bear ${token}`;
+    const token = JSON.parse(JSON.parse(window.localStorage.getItem("persist:auth"))?.auth)?.token || null;
 
+    config.headers.Authorization = `Bear ${token}`;
     return config;
 })
 

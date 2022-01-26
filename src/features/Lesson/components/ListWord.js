@@ -6,7 +6,7 @@ import { message } from 'antd';
 import { WordApi } from 'api/WordApi';
 import { useParams } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { fetchWords } from '../LessionSlice';
+import { fetchWords } from '../lessionSlice';
 
 ListWord.propTypes = {
 

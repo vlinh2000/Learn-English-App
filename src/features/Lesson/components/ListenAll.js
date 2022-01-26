@@ -11,7 +11,7 @@ import Category from './Category';
 import Search from 'antd/lib/input/Search';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import { increaseListenTime } from '../LessionSlice';
+import { increaseListenTime } from '../lessionSlice';
 
 ListenAll.propTypes = {
 

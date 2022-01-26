@@ -1,13 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { Card, Popconfirm } from 'antd';
+import { Card, message, Popconfirm } from 'antd';
 import { Link } from 'react-router-dom';
 import { images } from 'contants/images';
 import { DeleteOutlined, EditOutlined, EyeOutlined } from '@ant-design/icons/lib/icons';
 import { MdHeadphones, MdOutlineHeadphones } from "react-icons/md";
 import { format } from 'date-fns';
 import moment from 'moment';
+import { useDispatch } from 'react-redux';
+import { chooseLesson, deleteLesson, fetchLessons, setIsEdit, switchAddLessonModal } from '../lessionSlice';
 
 Item.propTypes = {
     lesson: PropTypes.object
@@ -56,16 +58,26 @@ const CardStyled = styled(Card)`
 
 function Item(props) {
 
-    const { lesson, onDelete, onEdit } = props;
+    const { lesson } = props;
+    const dispatch = useDispatch();
 
-    const handleDelete = () => {
-        onDelete(lesson._id);
+    const handleDelete = async () => {
+        const { error, payload } = await dispatch(deleteLesson(lesson._id));
+
+        if (error) {
+            message.error(payload.message)
+            return;
+        }
+
+        dispatch(fetchLessons());
+        message.success(payload.message);
     }
 
     const handleEdit = () => {
-        onEdit(lesson._id);
+        dispatch(chooseLesson(lesson._id));
+        dispatch(switchAddLessonModal(true));
+        dispatch(setIsEdit(true));
     }
-    moment.locale("vi");
 
     return (
         <Wrapper>
@@ -73,7 +85,7 @@ function Item(props) {
                 hoverable
                 cover={<img alt="image" src={"https://res.cloudinary.com/vlinh/image/upload/v1642504045/files_learn_english_app/banner_ngaewu.png"} />}
                 actions={[
-                    <EditOutlined key="edit" onClick={handleEdit} />,
+                    <EditOutlined key="edit" onClick={() => handleEdit()} />,
                     <Popconfirm
                         onConfirm={() => handleDelete()}
                         title={`Bạn có chắc muốn xóa bài học [ ${lesson.name} ] không ?`}>

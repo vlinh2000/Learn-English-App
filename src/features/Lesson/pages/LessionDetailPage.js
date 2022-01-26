@@ -14,7 +14,7 @@ import AddNewWord from '../components/AddNewWord';
 import { MdAssignmentReturn } from 'react-icons/md';
 import { LessonApi } from 'api/LessonApi';
 import { useSelector } from 'react-redux';
-import { fetchWords, increaseListenTime } from '../LessionSlice';
+import { fetchWords, increaseListenTime } from '../lessionSlice';
 import { useDispatch } from 'react-redux';
 import moment from 'moment';
 

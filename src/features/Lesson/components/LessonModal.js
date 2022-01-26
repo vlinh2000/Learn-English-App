@@ -5,8 +5,8 @@ import InputField from 'custom-fields/InputField';
 import UploadField from 'custom-fields/UploadField';
 import { ButtonStyled } from 'assets/styles/GobalStyled';
 import { LessonApi } from 'api/LessonApi';
-import { fetchLessons } from '../LessionSlice';
-import { useDispatch } from 'react-redux';
+import { fetchLessons, switchAddLessonModal } from '../lessionSlice';
+import { useDispatch, useSelector } from 'react-redux';
 
 LessonModal.propTypes = {
 
@@ -14,14 +14,15 @@ LessonModal.propTypes = {
 
 function LessonModal(props) {
 
-    const { isVisible, setIsVisible, isEdit, lesson } = props;
+    const { isVisibleAddLessonModal, isEdit, lessonSelected } = useSelector(state => state.homeInfo);
+
     const [isLoading, setIsLoading] = React.useState(false);
 
     const dispatch = useDispatch()
     const [form] = Form.useForm();
 
     const handleClose = () => {
-        setIsVisible(false);
+        dispatch(switchAddLessonModal(false));
         form.resetFields();
     }
 
@@ -29,12 +30,14 @@ function LessonModal(props) {
     React.useEffect(() => {
         isEdit &&
             form.setFieldsValue({
-                name: lesson.name,
-                author: lesson.author,
-                audio: lesson.audio,
-                image: lesson.image
+                name: lessonSelected.name,
+                author: lessonSelected.author,
+                audio: lessonSelected.audio,
+                image: lessonSelected.image
             })
-    }, [isEdit, lesson])
+
+        console.log({ lessonSelected });
+    }, [isEdit, lessonSelected])
 
     const initialValues = {
         name: '',
@@ -92,7 +95,7 @@ function LessonModal(props) {
                 values.audio.file && formData.append("audio", values.audio.file);
                 values.image.file && formData.append("image", values.image.file);
 
-                const response = await LessonApi.patch(lesson?._id, formData);
+                const response = await LessonApi.patch(lessonSelected?._id, formData);
                 message.success(response.message);
                 setIsLoading(false);
                 dispatch(fetchLessons());
@@ -112,8 +115,8 @@ function LessonModal(props) {
     return (
         <Modal
             footer={false}
-            visible={isVisible}
-            onCancel={handleClose}
+            visible={isVisibleAddLessonModal}
+            onCancel={() => handleClose()}
             title={isEdit ? "Sửa bài học" : "Thêm bài học"}>
             <Form
                 style={{ padding: "0 2rem" }}

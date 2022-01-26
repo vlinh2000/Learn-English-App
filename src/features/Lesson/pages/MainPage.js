@@ -1,10 +1,12 @@
 import React from 'react';
 import ListItem from '../components/ListItem';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchLessons, GetLessons } from '../LessionSlice';
+import { fetchLessons, GetLessons } from '../lessionSlice';
 import { Carousel } from 'antd';
 import styled from 'styled-components';
 import { MdChevronLeft, MdChevronRight } from 'react-icons/md';
+import AddLesson from '../components/AddLesson';
+import LessonModal from '../components/LessonModal';
 
 MainPage.propTypes = {
 
@@ -79,7 +81,6 @@ function MainPage(props) {
     }, []);
 
     React.useEffect(() => {
-        console.log("Lặp")
         let slice = [...lessons];
         let result = new Array(Math.ceil(slice.length / 10)).fill().map(() => slice.splice(0, 10));
         setLessonsSlice(result);
@@ -92,6 +93,16 @@ function MainPage(props) {
                     lessonsSlice?.map((lss, index) => <ListItem lessons={lss} key={index} />)
                 }
             </CarouselStyled>
+            <AddLesson
+            // onAdd={handleAdd}
+            />
+            <LessonModal
+            // lesson={lessonSelected}
+            // isEdit={isEdit}
+            // isVisible={isVisible}
+            // setIsVisible={setIsVisible}
+            />
+
             <MoveLeft onClick={() => carouselRef.current.prev()}>
                 <MdChevronLeft />
             </MoveLeft>

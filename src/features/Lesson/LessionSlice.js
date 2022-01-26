@@ -26,6 +26,16 @@ export const fetchWords = createAsyncThunk("lesson/fetchWords", async (params, {
 
 })
 
+export const deleteLesson = createAsyncThunk("lesson/deleteLesson", async (params, { fulfillWithValue, rejectWithValue }) => {
+    try {
+        const response = await LessonApi.delete(params);
+        return fulfillWithValue(response);
+    } catch (error) {
+        return rejectWithValue(error.response.data);
+    }
+
+})
+
 export const increaseListenTime = createAsyncThunk("lesson/increaseListenTime", async (params, { fulfillWithValue, rejectWithValue }) => {
     try {
         await LessonApi.patch(params, { time: 1 });
@@ -41,12 +51,26 @@ const initialState =
     lessons: [],
     words: [],
     isLoading: false,
-    error: ""
+    error: "",
+    lessonSelected: {},
+    isVisibleAddLessonModal: false,
+    isEdit: false
 };
 
 const lesson = createSlice({
     name: "lesson",
     initialState,
+    reducers: {
+        switchAddLessonModal: (state, action) => {
+            state.isVisibleAddLessonModal = action.payload;
+        },
+        chooseLesson: (state, action) => {
+            state.lessonSelected = state.lessons.find(lesson => lesson._id === action.payload);
+        },
+        setIsEdit: (state, action) => {
+            state.isEdit = action.payload
+        }
+    },
     extraReducers: {
         //get all lesson
         [fetchLessons.pending]: (state) => {
@@ -87,6 +111,6 @@ const lesson = createSlice({
 })
 
 const { reducer, actions } = lesson
-export const { } = actions;
+export const { switchAddLessonModal, chooseLesson, setIsEdit } = actions;
 export default reducer;
 

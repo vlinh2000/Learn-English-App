@@ -7,7 +7,7 @@ import styled from 'styled-components';
 import { ButtonStyled } from 'assets/styles/GobalStyled';
 import { MdSave } from 'react-icons/md';
 import { WordApi } from 'api/WordApi';
-import { fetchWords } from '../LessionSlice';
+import { fetchWords } from '../lessionSlice';
 import { useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 
