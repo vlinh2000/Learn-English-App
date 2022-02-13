@@ -7,6 +7,7 @@ import styled from 'styled-components';
 import { MdChevronLeft, MdChevronRight } from 'react-icons/md';
 import AddLesson from '../components/AddLesson';
 import LessonModal from '../components/LessonModal';
+import Skeleton from 'components/Skeleton';
 
 MainPage.propTypes = {
 
@@ -70,7 +71,7 @@ const MoveLeft = styled.span`
 `;
 
 function MainPage(props) {
-    const { lessons } = useSelector(state => state.homeInfo);
+    const { lessons, isLoading } = useSelector(state => state.homeInfo);
     const [lessonsSlice, setLessonsSlice] = React.useState();
 
     let carouselRef = React.createRef()
@@ -90,18 +91,11 @@ function MainPage(props) {
         <div style={{ padding: '0 3rem' }}>
             <CarouselStyled effect='fade' ref={carouselRef}>
                 {
-                    lessonsSlice?.map((lss, index) => <ListItem lessons={lss} key={index} />)
+                    isLoading ? <Skeleton isSkeletonMainPage /> : lessonsSlice?.map((lss, index) => <ListItem lessons={lss} key={index} />)
                 }
             </CarouselStyled>
-            <AddLesson
-            // onAdd={handleAdd}
-            />
-            <LessonModal
-            // lesson={lessonSelected}
-            // isEdit={isEdit}
-            // isVisible={isVisible}
-            // setIsVisible={setIsVisible}
-            />
+            <AddLesson />
+            <LessonModal />
 
             <MoveLeft onClick={() => carouselRef.current.prev()}>
                 <MdChevronLeft />

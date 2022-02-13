@@ -29,3 +29,30 @@
 .active {
   background-color: #ffdc00 !important;
 }
+
+.skeleton {
+  animation: loading infinite 1s ease-in-out alternate;
+}
+
+.skeleton-detail-page {
+  animation: loading1 infinite 1s ease-in-out alternate;
+}
+
+@keyframes loading {
+  0% {
+    background-color: hsl(195, 46%, 95%);
+  }
+
+  100% {
+    background-color: hsl(207, 60%, 81%);
+  }
+}
+@keyframes loading1 {
+  0% {
+    background-color: hsl(197, 15%, 91%);
+  }
+
+  100% {
+    background-color: hsl(215, 13%, 82%);
+  }
+}

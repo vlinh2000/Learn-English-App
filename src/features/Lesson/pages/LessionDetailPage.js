@@ -108,6 +108,9 @@ function LessionDetailPage(props) {
 
     const [timeCount, setTimeCount] = React.useState();
 
+    const [isLoading, setIsLoading] = React.useState(false);
+
+
     const handleOnchangeLesson = page => {
         navigate(`/lession/${lessons[page]._id}`, { replace: true });
     }
@@ -115,14 +118,16 @@ function LessionDetailPage(props) {
     React.useEffect(() => {
         const fetchLesson = async () => {
             try {
+                setIsLoading(true);
                 const response = await LessonApi.get(lessonId);
                 setLesson(response.lesson);
                 setTimeCount(response.lesson.time);
+                setIsLoading(false);
             } catch (error) {
                 message.error(error);
+                setIsLoading(false);
             }
         }
-
 
         fetchLesson();
         dispatch(fetchWords({ lessonId }));
@@ -147,68 +152,74 @@ function LessionDetailPage(props) {
             </BackButton>
             <Row gutter={[20, 20]}>
                 <Col lg={{ span: 8 }} md={{ span: 12 }} sm={{ span: 24 }} xs={{ span: 24 }}>
-                    <Wrapper color='#FFF'>
-                        <PictureStyled src={lesson?.image} alt='img' />
+                    <Wrapper color='#FFF' className={isLoading && "skeleton-detail-page"}>
+                        {!isLoading && <PictureStyled src={lesson?.image} alt='img' />}
                     </Wrapper>
 
                 </Col>
                 <Col lg={{ span: 8 }} md={{ span: 12 }} sm={{ span: 24 }} xs={{ span: 24 }}>
-                    <Wrapper>
-                        <Category icon={<CustomerServiceOutlined />} title="Âm thanh" />
-                        <AudioStyled onEnded={handleCount} controls src={lesson?.audio} />
+                    <Wrapper className={isLoading && "skeleton-detail-page"}>
+                        {
+                            !isLoading && <> <Category icon={<CustomerServiceOutlined />} title="Âm thanh" />
+                                <AudioStyled onEnded={handleCount} controls src={lesson?.audio} />
 
-                        <Category icon={<HistoryOutlined />} title={`Các từ mới (${words.length})`} color="#001f3f" />
-                        <ListWord words={words} />
+                                <Category icon={<HistoryOutlined />} title={`Các từ mới (${words.length})`} color="#001f3f" />
+                                <ListWord words={words} /></>
+                        }
 
                     </Wrapper>
                 </Col>
                 <Col lg={{ span: 8 }} md={{ span: 12 }} sm={{ span: 24 }} xs={{ span: 24 }}>
-                    <Wrapper>
-                        <GroupContent>
-                            <Category icon={<InfoOutlined />} title="Thông tin bài học" />
-                            <div>
-                                <CateInfo>Ngày tạo:</CateInfo>
-                                <Info>{moment(lesson?.createAt).format('DD-MM-yyyy h:mm a')}</Info>
-                            </div>
-                            <div>
-                                <CateInfo>Số lần nghe:</CateInfo>
-                                <Info>{timeCount}</Info>
-                            </div>
-                            <div>
-                                <CateInfo>Tên chủ sở hữu:</CateInfo>
-                                <Info>{lesson?.author}</Info>
-                            </div>
-                        </GroupContent>
+                    <Wrapper className={isLoading && "skeleton-detail-page"}>
+                        {
+                            !isLoading && <>
+                                <GroupContent>
+                                    <Category icon={<InfoOutlined />} title="Thông tin bài học" />
+                                    <div>
+                                        <CateInfo>Ngày tạo:</CateInfo>
+                                        <Info>{moment(lesson?.createAt).format('DD-MM-yyyy h:mm a')}</Info>
+                                    </div>
+                                    <div>
+                                        <CateInfo>Số lần nghe:</CateInfo>
+                                        <Info>{timeCount}</Info>
+                                    </div>
+                                    <div>
+                                        <CateInfo>Tên chủ sở hữu:</CateInfo>
+                                        <Info>{lesson?.author}</Info>
+                                    </div>
+                                </GroupContent>
+                                <GroupContent>
+                                    <Category icon={<MenuOutlined />} title="Nghe liên tục" />
+                                    <div style={{ marginLeft: '2rem' }}>
+                                        <ListenAll />
+                                    </div>
+                                </GroupContent>
+                                <GroupContent>
+                                    <Category icon={<SwapOutlined />} title="Chuyển bài học" />
+                                    <div style={{ marginLeft: '2rem' }}>
+                                        <Popover
+                                            title="Danh sách bài học"
+                                            trigger="click"
+                                            placement='left'
+                                            content={
+                                                <div style={{ maxWidth: 380, maxHeight: 500, overflowY: 'auto' }}>
+                                                    {lessons?.map((ls, index) => <Tooltip key={index} title={ls.name}>
+                                                        <LinkStyled className={lessonId === ls._id && "active"} to={`/lession/${ls._id}`} >Bài {index + 1}</LinkStyled>
+                                                    </Tooltip>)}
+                                                </div>}
+                                        >
+                                            <ButtonStyled
+                                                icon={<SendOutlined style={{ transform: 'rotate(-45deg)' }} />}
+                                                color='#085fc5'>
+                                                Chuyển nhanh
+                                            </ButtonStyled>
+                                        </Popover>
 
-                        <GroupContent>
-                            <Category icon={<MenuOutlined />} title="Nghe liên tục" />
-                            <div style={{ marginLeft: '2rem' }}>
-                                <ListenAll />
-                            </div>
-                        </GroupContent>
-                        <GroupContent>
-                            <Category icon={<SwapOutlined />} title="Chuyển bài học" />
-                            <div style={{ marginLeft: '2rem' }}>
-                                <Popover
-                                    title="Danh sách bài học"
-                                    trigger="click"
-                                    placement='left'
-                                    content={
-                                        <div style={{ maxWidth: 380, maxHeight: 500, overflowY: 'auto' }}>
-                                            {lessons?.map((ls, index) => <Tooltip key={index} title={ls.name}>
-                                                <LinkStyled className={lessonId === ls._id && "active"} to={`/lession/${ls._id}`} >Bài {index + 1}</LinkStyled>
-                                            </Tooltip>)}
-                                        </div>}
-                                >
-                                    <ButtonStyled
-                                        icon={<SendOutlined style={{ transform: 'rotate(-45deg)' }} />}
-                                        color='#085fc5'>
-                                        Chuyển nhanh
-                                    </ButtonStyled>
-                                </Popover>
+                                    </div>
+                                </GroupContent>
+                            </>
+                        }
 
-                            </div>
-                        </GroupContent>
 
                     </Wrapper>
                 </Col>

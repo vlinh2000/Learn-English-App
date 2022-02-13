@@ -1,0 +1,38 @@
+.wrapper {
+    width: 20%;
+    display: inline-block;
+    margin-bottom: 20px;
+    padding: 0 10px;
+}
+.banner,
+.name,
+.time,
+.listen-count,
+.menu {
+    background-color: #fff;
+    margin: 10px 0;
+    border-radius: 5px;
+}
+
+.banner {
+    height: 76.54px;
+}
+
+.name {
+    height: 20px;
+    width: 90%;
+}
+
+.time {
+    height: 15px;
+    width: 80%;
+}
+
+.listen-count {
+    width: 10%;
+    height: 15px;
+}
+
+.menu {
+    height: 30px;
+}

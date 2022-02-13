@@ -9,14 +9,35 @@ Word.propTypes = {
 
 };
 
+
+const ContentFont = styled.div`
+    position:absolute;
+    background:#39CCCC;
+    width: 100%;
+    height: 100%;
+    padding:2px 5px;
+    backface-visibility: hidden;
+`;
+
+const ContentBack = styled.div`
+    position:absolute;
+    background:#01FF70;
+    width: 100%;
+    height: 100%;
+    padding:2px 10px;
+    transform: rotateY(180deg);
+    backface-visibility: hidden;
+    `;
+
 const ContentInner = styled.div`
-        position: relative;
-        width: 100%;
-        height: 100%;
-        text-align: center;
-        transition: transform 0.5s;
-        transform-style: preserve-3d;
-        box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    position: relative;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    transition: transform 0.5s;
+    transform-style: preserve-3d;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    perspective: 1000px;
     `;
 
 const NewWord = styled.div`
@@ -31,28 +52,11 @@ const NewWord = styled.div`
     height:80px;
     margin: 0 10px 10px 0;
 
-    &:hover ${ContentInner} {
+    &:hover ${ContentInner} {      
         transform: rotateY(180deg);
     }
 `;
 
-
-const ContentFont = styled.div`
-    position:absolute;
-    background:#39CCCC;
-    width: 100%;
-    height: 100%;
-    padding:2px 5px;
-    `;
-
-const ContentBack = styled.div`
-    position:absolute;
-    background:#01FF70;
-    width: 100%;
-    height: 100%;
-    padding:2px 10px;
-    transform: rotateY(180deg);
-`;
 
 function Word(props) {
     const { word, onEdit, onDelete, isLoading } = props;
@@ -69,6 +73,7 @@ function Word(props) {
         setIsVisible(false);
     }
 
+    console.log({ word })
 
     return (
         <Popover
